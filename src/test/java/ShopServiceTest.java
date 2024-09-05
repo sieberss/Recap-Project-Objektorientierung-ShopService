@@ -19,6 +19,7 @@ class ShopServiceTest {
         //THEN
         Order expected = new Order("-1", List.of(new Product("1", "Apfel")));
         assertEquals(expected.products(), actual.products());
+        assertEquals(expected.status(), actual.status());
         assertNotNull(expected.id());
     }
 
@@ -31,5 +32,23 @@ class ShopServiceTest {
         //WHEN
         //THEN
         assertThrows(ProductNotAvailableException.class, ()->shopService.addOrder(productsIds));
+    }
+
+    @Test
+    void updateOrderTest() throws ProductNotAvailableException {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productsIds = List.of("1");
+
+        //WHEN
+        Order old = shopService.addOrder(productsIds);
+        shopService.updateOrder(old.id(), OrderStatus.COMPLETED);
+        List<Order> completed = shopService.getAllOrdersWithStatus(OrderStatus.COMPLETED);
+
+        //THEN
+        Order actual = completed.get(0);
+        assertEquals(old.products(), actual.products());
+        assertEquals(old.id(), actual.id());
+
     }
 }
