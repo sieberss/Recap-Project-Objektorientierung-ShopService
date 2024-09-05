@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ShopServiceTest {
 
     @Test
-    void addOrderTest() {
+    void addOrderTest() throws ProductNotAvailableException {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1");
@@ -22,15 +23,13 @@ class ShopServiceTest {
     }
 
     @Test
-    void addOrderTest_whenInvalidProductId_expectNull() {
+    void addOrderTest_whenInvalidProductId_expectProductNotAvailableException() {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
-        Order actual = shopService.addOrder(productsIds);
-
         //THEN
-        assertNull(actual);
+        assertThrows(ProductNotAvailableException.class, ()->shopService.addOrder(productsIds));
     }
 }
