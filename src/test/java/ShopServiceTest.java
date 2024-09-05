@@ -13,7 +13,7 @@ class ShopServiceTest {
     @Test
     void addOrderTest() throws ProductNotAvailableException {
         //GIVEN
-        ShopService shopService = new ShopService();
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new IdService());
         List<String> productsIds = List.of("1");
 
         //WHEN
@@ -32,7 +32,7 @@ class ShopServiceTest {
     @Test
     void addOrderTest_whenInvalidProductId_expectProductNotAvailableException() {
         //GIVEN
-        ShopService shopService = new ShopService();
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new IdService());
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
@@ -43,7 +43,7 @@ class ShopServiceTest {
     @Test
     void updateOrderTest() throws ProductNotAvailableException {
         //GIVEN
-        ShopService shopService = new ShopService();
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new IdService());
         List<String> productsIds = List.of("1");
 
         //WHEN

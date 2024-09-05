@@ -2,16 +2,14 @@ import lombok.RequiredArgsConstructor;
 
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ShopService {
     private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
+    private final IdService idService;
 
     public Order addOrder(List<String> productIds) throws ProductNotAvailableException {
         List<Product> products = new ArrayList<>();
@@ -22,7 +20,7 @@ public class ShopService {
             }
             products.add(productToOrder.get());
         }
-        Order newOrder = new Order(UUID.randomUUID().toString(), products, Instant.now(), OrderStatus.PROCESSING);
+        Order newOrder = new Order(idService.generateId(), products, Instant.now(), OrderStatus.PROCESSING);
         return orderRepo.addOrder(newOrder);
     }
 
@@ -36,5 +34,15 @@ public class ShopService {
         return orderRepo.getOrders().stream()
                 .filter(order -> order.status() == status)
                 .collect(Collectors.toList());
+    }
+
+    public Map<OrderStatus, Order> getOldestOrderPerStatus() {
+        Map<OrderStatus, Order> oldestOrders = new HashMap<>();
+        for (OrderStatus status : OrderStatus.values()) {
+            Order oldestOrder = getAllOrdersWithStatus(status).stream()
+                    .min((a,b)->a.createdAt().compareTo(b.createdAt())).orElse(null);
+            oldestOrders.put(status, oldestOrder);
+        }
+        return oldestOrders;
     }
 }

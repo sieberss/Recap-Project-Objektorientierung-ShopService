@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         OrderRepo orderRepo = new OrderMapRepo();
         ProductRepo productRepo = new ProductRepo();
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo, new IdService());
         productRepo.addProduct(new Product("2", "Banana"));
         productRepo.addProduct(new Product("3", "Cherry"));
         productRepo.addProduct(new Product("4", "Orange"));
@@ -23,5 +23,6 @@ public class Main {
         }
 
         System.out.println(shopService.getAllOrdersWithStatus(OrderStatus.PROCESSING));
+        System.out.println(shopService.getOldestOrderPerStatus());
     }
 }
