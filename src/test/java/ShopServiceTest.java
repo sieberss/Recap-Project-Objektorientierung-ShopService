@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +24,9 @@ class ShopServiceTest {
         assertEquals(expected.products(), actual.products());
         assertEquals(expected.status(), actual.status());
         assertNotNull(expected.id());
+        //assert that timestamp for new order is within previous second
+        assertTrue(Instant.now().isAfter(actual.createdAt()));
+        assertTrue(Instant.now().minus(1, ChronoUnit.SECONDS).isBefore(actual.createdAt()));
     }
 
     @Test
